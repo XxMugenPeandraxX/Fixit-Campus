@@ -2,6 +2,7 @@ const express = require("express");
 require("dotenv").config();
 const db = require("./config/db");
 const cors = require("cors");
+const { swaggerDocs } = require("./config/swagger.js");
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -12,6 +13,8 @@ db.connectDB();
 //middlewares
 app.use(cors());
 app.use(express.json());
+
+swaggerDocs(app);
 
 //routes
 const usersRoute = require("./routes/userRouter");
