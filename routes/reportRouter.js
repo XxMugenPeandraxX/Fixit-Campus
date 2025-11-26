@@ -5,7 +5,7 @@ const {
   createReport,
   //   getUserReport,
   //   getReportById,
-  //   getAllReports,
+  getAllReports,
   //   deleteReport,
   //   updateReport,
 } = require("../controllers/reportController");
@@ -79,8 +79,53 @@ router.post("/create", upload.array("images", 5), createReport);
 //get report by id
 //router.get('/:id', auth, getReportById)
 
-//get all reports
-//router.get('/', getAllReports)
+/**
+ * @swagger
+ * /api/report:
+ *   get:
+ *     summary: Retrieve all reports
+ *     description: Fetches a list of all reports from the database.
+ *     tags: [Reports]
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved reports
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 reports:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                         example: "60d0fe4f5311236168a109ca"
+ *                       title:
+ *                         type: string
+ *                         example: "Monthly Sales"
+ *       500:
+ *         description: Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "An error occurred while fetching reports"
+ *                 error:
+ *                   type: string
+ */
+
+router.get("/", getAllReports);
 
 //--------------------
 //admin access

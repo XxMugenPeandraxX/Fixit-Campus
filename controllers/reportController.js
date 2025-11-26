@@ -69,3 +69,20 @@ exports.createReport = async (req, res) => {
     });
   }
 };
+
+exports.getAllReports = async (req, res) => {
+  try {
+    const reports = await Report.find({});
+    res.status(200).json({
+      success: true,
+      reports,
+    });
+  } catch (error) {
+    console.error("Fetch all Reports Error:", error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while fetching all reports",
+      error: error.message,
+    });
+  }
+};
