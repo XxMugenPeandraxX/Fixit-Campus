@@ -84,7 +84,7 @@ router.post("/create", upload.array("images", 5), createReport);
  * /api/report:
  *   get:
  *     summary: Retrieve all reports
- *     description: Fetches a list of all reports from the database.
+ *     description: Fetches all reports with images, reporter info, and status.
  *     tags: [Reports]
  *     responses:
  *       200:
@@ -104,10 +104,50 @@ router.post("/create", upload.array("images", 5), createReport);
  *                     properties:
  *                       _id:
  *                         type: string
- *                         example: "60d0fe4f5311236168a109ca"
+ *                         example: "67a12bc3456def7890abcd12"
  *                       title:
  *                         type: string
- *                         example: "Monthly Sales"
+ *                         example: "Broken Pipe in Hostel A"
+ *                       description:
+ *                         type: string
+ *                         example: "Water is leaking from the wall near room 204."
+ *                       category:
+ *                         type: string
+ *                         example: "Plumbing"
+ *                       location:
+ *                         type: string
+ *                         example: "Hostel A - Block B"
+ *                       images:
+ *                         type: array
+ *                         items:
+ *                           type: object
+ *                           properties:
+ *                             publicId:
+ *                               type: string
+ *                               example: "fixit/abc123xyz"
+ *                             url:
+ *                               type: string
+ *                               example: "https://res.cloudinary.com/demo/image/upload/v1234567/fixit/abc123xyz.jpg"
+ *                       status:
+ *                         type: string
+ *                         enum: [pending, in-progress, resolved]
+ *                         example: "pending"
+ *                       reportedBy:
+ *                         type: string
+ *                         example: "60d0fe4f5311236168a109ca"
+ *                       comments:
+ *                         type: array
+ *                         items:
+ *                           type: string
+ *                           example: "60d0fe4f5311236168a100aa"
+ *                       createdAt:
+ *                         type: string
+ *                         format: date-time
+ *                         example: "2025-01-20T10:32:15.123Z"
+ *                       updatedAt:
+ *                         type: string
+ *                         format: date-time
+ *                         example: "2025-01-20T10:32:15.123Z"
  *       500:
  *         description: Server Error
  *         content:
