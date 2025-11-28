@@ -1,6 +1,7 @@
 const Report = require("../models/Report");
 const cloudinary = require("../config/cloudinary");
 const { Readable } = require("stream");
+const mongoose = require("mongoose");
 
 const uploadToCloudinary = (fileBuffer) => {
   return new Promise((resolve, reject) => {
@@ -82,6 +83,80 @@ exports.getAllReports = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "An error occurred while fetching all reports",
+      error: error.message,
+    });
+  }
+};
+
+exports.updateReport = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "invalid report ID",
+      });
+    }
+
+    if (status === undefined || status === null) {
+      return res.status(400).json({
+        success: false,
+        message: "Status is required",
+      });
+    }
+
+    const allowed = {
+      0: "pending",
+      1: "in-progress",
+      2: "resolved",
+    };
+
+    const newStatus = allowed[status];
+    if (!newStatus) {
+      return res.status(400).json({
+        success: false,
+        message: "invalid status recieved",
+      });
+    }
+
+    const report = await Report.findById(id);
+    if (!report) {
+      return res.status(404).json({
+        success: false,
+        message: "Report not found",
+      });
+    }
+
+    const transition = {
+      pending: ["in-progress"],
+      "in-progress": ["resolved"],
+      resolved: [],
+    };
+
+    const current = report.status;
+
+    if (!transition[current].includes(newStatus)) {
+      return res.status(409).json({
+        success: false,
+        message: `Cannot move from ${current} to ${newStatus}`,
+      });
+    }
+
+    report.status = newStatus;
+    await report.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Status updated successfully",
+      report,
+    });
+  } catch (error) {
+    console.log("An error occured while updating report status: \n", error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while updating report",
       error: error.message,
     });
   }
